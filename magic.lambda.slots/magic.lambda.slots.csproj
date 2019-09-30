@@ -6,8 +6,8 @@
     <Description>foo</Description>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\projects\personal\magic.lambda.slots\magic.lambda.slots\magic.lambda.slots.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin/Release/netstandard2.0/magic.lambda.slots.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
