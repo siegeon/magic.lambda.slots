@@ -31,23 +31,8 @@ namespace magic.lambda.slots
             var lambda = slotNode.Children.First(x => x.Name == ".lambda");
 
             // Making sure lambda becomes its own root node.
+            // No need to clone, GetSlot has already cloned.
             lambda.UnTie();
-
-            // Sanity checking arguments.
-            var slotArgs = slotNode.Children.FirstOrDefault(x => x.Name == ".arguments");
-            if (slotArgs?.Children.Any(x => x.Name == "*") == false)
-            {
-                // No "accept all arguments" declaration.
-                if (input.Children.Any() && (slotArgs == null || slotArgs.Children.Count() == 0))
-                {
-                    throw new ApplicationException($"Slot named [{slotName}] does not take arguments at all.");
-                }
-                foreach (var idxInputArg in input.Children)
-                {
-                    if (!slotArgs.Children.Any(x => x.Name == idxInputArg.Name))
-                        throw new ApplicationException($"Slot [{slotName}] does not know how to handle argument [{idxInputArg.Name}]");
-                }
-            }
 
             // Preparing arguments, making sure we clon ethem to avoid that enumeration process is aborted.
             var args = new Node(".arguments");
