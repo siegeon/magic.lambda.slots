@@ -6,9 +6,14 @@
 using System;
 using System.Threading;
 
-namespace magic.lambda.slots
+// TODO: Consider moving class into its own utilities project for thread helpers.
+namespace magic.lambda.slots.utilities
 {
-    public class Synchronizer<TImpl, TIRead, TIWrite> where TImpl : TIWrite, TIRead
+    /*
+     * Helper class to synchronize access to some shared resource, potentially shared among
+     * multiple threads.
+     */
+    internal class Synchronizer<TImpl, TIRead, TIWrite> where TImpl : TIWrite, TIRead
     {
         readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
         readonly TImpl _shared;
@@ -18,6 +23,9 @@ namespace magic.lambda.slots
             _shared = shared;
         }
 
+        /*
+         * Allows read only access inside of your lambda functor.
+         */
         public void Read(Action<TIRead> functor)
         {
             _lock.EnterReadLock();
@@ -31,6 +39,10 @@ namespace magic.lambda.slots
             }
         }
 
+        /*
+         * Allows read only access inside of your lambda functor, while
+         * expecting you to return some object during invocation.
+         */
         public T Read<T>(Func<TIRead, T> functor)
         {
             _lock.EnterReadLock();
@@ -44,6 +56,9 @@ namespace magic.lambda.slots
             }
         }
 
+        /*
+         * Allows read and write access inside of your lambda functor.
+         */
         public void Write(Action<TIWrite> functor)
         {
             _lock.EnterWriteLock();
@@ -58,7 +73,7 @@ namespace magic.lambda.slots
         }
     }
 
-    public class Synchronizer<TImpl> : Synchronizer<TImpl, TImpl, TImpl>
+    internal class Synchronizer<TImpl> : Synchronizer<TImpl, TImpl, TImpl>
     {
         public Synchronizer(TImpl shared)
             : base(shared)

@@ -5,16 +5,23 @@
 
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
 
 namespace magic.lambda.slots
 {
+    /// <summary>
+    /// [return-value] slot for returning a piece of value from some evaluation object.
+    /// </summary>
     [Slot(Name = "return-value")]
     public class ReturnValue : ISlot
     {
+        /// <summary>
+        /// Slot implementation.
+        /// </summary>
+        /// <param name="signaler">Signaler that raised signal.</param>
+        /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
             if (input.Children.Any())

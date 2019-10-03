@@ -9,32 +9,23 @@ using System.Collections.Generic;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
+using magic.lambda.slots.utilities;
 
 namespace magic.lambda.slots
 {
+    /// <summary>
+    /// [slot] slot that creates a dynamic slot, that can be invoked using the [signal] slot.
+    /// </summary>
     [Slot(Name = "slot")]
     public class Slot : ISlot
     {
         readonly static Synchronizer<Dictionary<string, Node>> _slots = new Synchronizer<Dictionary<string, Node>>(new Dictionary<string, Node>());
 
-        public static Node GetSlot(string name)
-        {
-            return _slots.Read((slots) => slots[name].Clone());
-        }
-
-        public static IEnumerable<string> Slots
-        {
-            get
-            {
-                var result = new List<string>();
-                _slots.Read(x =>
-                {
-                    result.AddRange(x.Keys);
-                });
-                return result;
-            }
-        }
-
+        /// <summary>
+        /// Slot implementation.
+        /// </summary>
+        /// <param name="signaler">Signaler that raised signal.</param>
+        /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
             if (!input.Children.Any(x => x.Name == ".lambda"))
@@ -47,5 +38,17 @@ namespace magic.lambda.slots
             slotNode.AddRange(input.Children.Select(x => x.Clone()));
             _slots.Write((slots) => slots[input.GetEx<string>()] = slotNode);
         }
+
+        #region [ -- Private and internal helper methods -- ]
+
+        /*
+         * Reutrns the named slot to caller.
+         */
+        internal static Node GetSlot(string name)
+        {
+            return _slots.Read((slots) => slots[name].Clone());
+        }
+
+        #endregion
     }
 }

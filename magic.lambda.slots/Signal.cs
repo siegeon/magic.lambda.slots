@@ -12,9 +12,17 @@ using magic.signals.contracts;
 
 namespace magic.lambda.slots
 {
+    /// <summary>
+    /// [signal] slot for invoking dynamically created slots, that have been created with the [slot] slot.
+    /// </summary>
     [Slot(Name = "signal")]
     public class Signalize : ISlot
     {
+        /// <summary>
+        /// Slot implementation.
+        /// </summary>
+        /// <param name="signaler">Signaler that raised signal.</param>
+        /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
             // Retrieving slot's lambda.

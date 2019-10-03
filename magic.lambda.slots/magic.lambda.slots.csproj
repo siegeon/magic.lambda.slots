@@ -3,7 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Thomas Hansen</Authors>
-    <Description>foo</Description>
+    <Description>Dynamic slot support for magic.lambda</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>Thomas Hansen, thomas@gaiasoul.com</Copyright>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/polterguy/magic.lambda.slots/master/LICENSE</PackageLicenseUrl>
+    <PackageIconUrl>https://polterguy.github.io/favicon.ico</PackageIconUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
