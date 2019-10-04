@@ -6,10 +6,22 @@
 Provides the ability to create dynamic slots for [Magic](https://github.com/polterguy.magic). More specifically, provides
 the following slots.
 
-* __[slot]__ - Creates a dynamic slot, that can be invoked with the __[signal]__ slot.
-* __[signal]__ - Invokes a dynamically create slot that has been created with the __[slot]__ slot.
-* __[return-nodes]__ - Returns a bunch of nodes to caller.
-* __[return-value]__ - Returns a single value to caller.
+* __[slots.create]__ - Creates a dynamic slot, that can be invoked with the __[slots.signal]__ slot.
+* __[slots.signal]__ - Invokes a dynamically create slot that has been created with the __[slots.create]__ slot.
+* __[slots.get]__ - Returns the entire lambda object for a slot that has been previously created with the [slots.create] slot.
+* __[slots.delete]__ - Deletes a slot that has been previously created with the [slots.create] slot.
+* __[slots.return-nodes]__ - Returns a bunch of nodes to caller.
+* __[slots.return-value]__ - Returns a single value to caller.
+
+Below is an example of how to create and invoke a slot.
+
+```
+slots.create:foo
+   slots.return-value:int:57
+slots.signal:foo
+```
+
+After evaluation of the above Hyperlambda, the value of the __[slots.signal]__ node will be 57.
 
 ## License
 

@@ -3,7 +3,6 @@
  * Licensed as Affero GPL unless an explicitly proprietary license has been obtained.
  */
 
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using magic.node;
@@ -13,10 +12,10 @@ using magic.signals.contracts;
 namespace magic.lambda.slots
 {
     /// <summary>
-    /// [signal] slot for invoking dynamically created slots, that have been created with the [slot] slot.
+    /// [slots.signal] slot for invoking dynamically created slots, that have been created with the [slots.create] slot.
     /// </summary>
-    [Slot(Name = "signal")]
-    public class Signalize : ISlot
+    [Slot(Name = "slots.signal")]
+    public class SlotsSignal : ISlot
     {
         /// <summary>
         /// Slot implementation.
@@ -25,24 +24,17 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            // Retrieving slot's lambda.
-            var slotName = input.GetEx<string>() ?? throw new ApplicationException("Keyword [signal] requires a value being the name of slot to invoke");
-            var slotNode = Slot.GetSlot(slotName);
-            var lambda = slotNode.Children.First(x => x.Name == ".lambda");
+            // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
+            var lambda = SlotsCreate.GetSlot(input.Get<string>());
 
-            // Making sure lambda becomes its own root node.
-            // No need to clone, GetSlot has already cloned.
-            lambda.UnTie();
-
-            // Preparing arguments, making sure we clon ethem to avoid that enumeration process is aborted.
-            var args = new Node(".arguments");
-            args.AddRange(input.Children.Select(x => x.Clone()));
-            lambda.Insert(0, args);
+            // Preparing arguments, if there are any.
+            if (input.Children.Any())
+                lambda.Insert(0, new Node(".arguments", null, input.Children.ToList()));
 
             // Evaluating lambda of slot.
             signaler.Signal("eval", lambda);
 
-            // Returning any returned nodes from lambda.
+            // Making sure we return any return values, if any, to the caller.
             input.Clear();
             input.Value = null;
             if (lambda.Value is IEnumerable<Node> nodes)

@@ -3,8 +3,6 @@
  * Licensed as Affero GPL unless an explicitly proprietary license has been obtained.
  */
 
-using System;
-using System.Linq;
 using System.Collections.Generic;
 using magic.node;
 using magic.node.extensions;
@@ -14,10 +12,10 @@ using magic.lambda.slots.utilities;
 namespace magic.lambda.slots
 {
     /// <summary>
-    /// [slot] slot that creates a dynamic slot, that can be invoked using the [signal] slot.
+    /// [slots.create] slot that creates a dynamic slot, that can be invoked using the [slots.signal] slot.
     /// </summary>
-    [Slot(Name = "slot")]
-    public class Slot : ISlot
+    [Slot(Name = "slots.create")]
+    public class SlotsCreate : ISlot
     {
         readonly static Synchronizer<Dictionary<string, Node>> _slots = new Synchronizer<Dictionary<string, Node>>(new Dictionary<string, Node>());
 
@@ -28,25 +26,25 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            if (!input.Children.Any(x => x.Name == ".lambda"))
-                throw new ApplicationException("Keyword [slot] requires at least a [.lambda] children node");
-
-            if (input.Children.Any((x => x.Name != ".lambda" && x.Name != ".arguments")))
-                throw new ApplicationException("Keyword [slot] can only handle [.lambda] and [.arguments] children nodes");
-
-            var slotNode = new Node();
-            slotNode.AddRange(input.Children.Select(x => x.Clone()));
-            _slots.Write((slots) => slots[input.GetEx<string>()] = slotNode);
+            _slots.Write((slots) => slots[input.GetEx<string>()] = input.Clone());
         }
 
         #region [ -- Private and internal helper methods -- ]
 
         /*
-         * Reutrns the named slot to caller.
+         * Returns the named slot to caller.
          */
         internal static Node GetSlot(string name)
         {
             return _slots.Read((slots) => slots[name].Clone());
+        }
+
+        /*
+         * Deletes the named slot.
+         */
+        internal static void DeleteSlot(string name)
+        {
+            _slots.Write((slots) => slots.Remove(name));
         }
 
         #endregion

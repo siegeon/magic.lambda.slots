@@ -12,10 +12,10 @@ using magic.signals.contracts;
 namespace magic.lambda.slots
 {
     /// <summary>
-    /// [return-value] slot for returning a piece of value from some evaluation object.
+    /// [slots.return-value] slot for returning a piece of value from some evaluation object.
     /// </summary>
-    [Slot(Name = "return-value")]
-    public class ReturnValue : ISlot
+    [Slot(Name = "slots.return-value")]
+    public class SlotsReturnValue : ISlot
     {
         /// <summary>
         /// Slot implementation.
@@ -27,9 +27,8 @@ namespace magic.lambda.slots
             if (input.Children.Any())
                 throw new ApplicationException("Slot [return-value] cannot have children nodes");
 
-            var root = input;
-
             // Notice, we store the return value as the value (by reference) of the root node of whatever lambda object we're currently within.
+            var root = input;
             while (root.Parent != null)
                 root = root.Parent;
             root.Value = input.GetEx<object>();
