@@ -16,8 +16,15 @@ the following slots.
 Below is an example of how to create and invoke a slot.
 
 ```
+/*
+ * First we create a dynamic slot.
+ */
 slots.create:foo
    slots.return-value:int:57
+
+/*
+ * Then we invoke it.
+ */
 slots.signal:foo
 ```
 
