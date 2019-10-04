@@ -24,7 +24,6 @@ namespace magic.lambda.slots
         public void Signal(ISignaler signaler, Node input)
         {
             // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-            input.Clear();
             input.AddRange(SlotsCreate.GetSlot(input.Get<string>()).Children.ToList());
         }
     }

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
+using magic.lambda.slots.utilities;
 
 namespace magic.lambda.slots
 {
@@ -24,23 +25,30 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-            var lambda = SlotsCreate.GetSlot(input.Get<string>());
+            // Making sure we're able to handle returned values and nodes from slot implementation.
+            var result = new SlotResult(input);
+            signaler.Scope("slots.result", result, () =>
+            {
+                // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
+                var lambda = SlotsCreate.GetSlot(input.Get<string>());
 
-            // Preparing arguments, if there are any.
-            if (input.Children.Any())
-                lambda.Insert(0, new Node(".arguments", null, input.Children.ToList()));
+                // Preparing arguments, if there are any.
+                if (input.Children.Any())
+                    lambda.Insert(0, new Node(".arguments", null, input.Children.ToList()));
 
-            // Evaluating lambda of slot.
-            signaler.Signal("eval", lambda);
+                // Evaluating lambda of slot.
+                signaler.Signal("eval", lambda);
 
-            // Making sure we return any return values, if any, to the caller.
-            input.Clear();
-            input.Value = null;
-            if (lambda.Value is IEnumerable<Node> nodes)
-                input.AddRange(nodes.ToList());
-            else
-                input.Value = lambda.Value;
+                // Clearing Children collection, since it might contain input parameters.
+                input.Clear();
+
+                /*
+                * Simply setting value and children to "slots.result" stack object, since its value
+                * was initially set to its old value during startup of method.
+                */
+                input.Value = result.Result.Value;
+                input.AddRange(result.Result.Children.ToList());
+            });
         }
     }
 }

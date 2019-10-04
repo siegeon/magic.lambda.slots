@@ -7,6 +7,7 @@ using System.Linq;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
+using magic.lambda.slots.utilities;
 
 namespace magic.lambda.slots
 {
@@ -23,16 +24,7 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            // Notice, we store the return value as the value (by reference) of the root node of whatever lambda object we're currently within.
-            var root = input;
-            while (root.Parent != null)
-                root = root.Parent;
-
-            // Figuring out if we should return children or evaluation of expression to caller.
-            if (input.Value == null)
-                root.Value = input.Children;
-            else
-                root.Value = input.Evaluate().ToList();
+            signaler.Peek<SlotResult>("slots.result").Result.AddRange(input.Value == null ? input.Children.ToList() : input.Evaluate());
         }
     }
 }
