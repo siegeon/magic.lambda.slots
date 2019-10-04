@@ -30,6 +30,11 @@ slots.signal:foo
 
 After evaluation of the above Hyperlambda, the value of the __[slots.signal]__ node will be 57.
 
+## Rational
+
+This project basically allows you to declare and implement _"globally accessible function objects"_, which you can access from
+anywhere in your code. Think of a slot as a _"function"_, and the signaling of a slot like the _"function invocation"_.
+
 ## License
 
 Magic is licensed as Affero GPL. This means that you can only use it to create Open Source solutions.
