@@ -9,6 +9,9 @@ namespace magic.lambda.slots.utilities
 {
     /*
      * Helper class to allow for slots to return values and children nodes.
+     * 
+     * Notice, it might feel like overkill to create specific type, but we might
+     * imagine returning more complex stuff later, such as stack results, etc ...
      */
     internal class SlotResult
     {

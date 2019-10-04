@@ -3,6 +3,7 @@
  * Licensed as Affero GPL unless an explicitly proprietary license has been obtained.
  */
 
+using System.Linq;
 using System.Collections.Generic;
 using magic.node;
 using magic.node.extensions;
@@ -37,6 +38,22 @@ namespace magic.lambda.slots
         internal static Node GetSlot(string name)
         {
             return _slots.Read((slots) => slots[name].Clone());
+        }
+
+        /*
+         * Returns true to caller if the named slot exists.
+         */
+        internal static bool SlotExists(string name)
+        {
+            return _slots.Read((slots) => slots.ContainsKey(name));
+        }
+
+        /*
+         * Returns the names of all slots that exists in the system.
+         */
+        internal static IEnumerable<string> Slots()
+        {
+            return _slots.Read((slots) => slots.Keys.ToList());
         }
 
         /*

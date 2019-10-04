@@ -12,6 +12,8 @@ the following slots.
 * __[slots.delete]__ - Deletes a slot that has been previously created with the __[slots.create]__ slot.
 * __[slots.return-nodes]__ - Returns a bunch of nodes to caller from inside of your slot.
 * __[slots.return-value]__ - Returns a single value to caller from inside of your slot.
+* __[slots.exists]__ - Returns true of the given slot exists.
+* __[slots.vocabulary]__ - Returns the names of all dynamically created slots.
 
 Below is an example of how to create and invoke a slot.
 

@@ -5,6 +5,7 @@
 
 using System.Linq;
 using Xunit;
+using magic.node.extensions;
 
 namespace magic.lambda.slots.tests
 {
@@ -18,6 +19,27 @@ slots.create:foo
    slots.return-value:int:57
 slots.signal:foo");
             Assert.Equal(57, lambda.Children.Skip(1).First().Value);
+        }
+
+        [Fact]
+        public void CreateSlotCheckIfExists()
+        {
+            var lambda = Common.Evaluate(@"
+slots.create:foo
+   slots.return-value:int:57
+slots.exists:foo");
+            Assert.Equal(true, lambda.Children.Skip(1).First().Value);
+        }
+
+        [Fact]
+        public void CreateSlotVocabulary()
+        {
+            var lambda = Common.Evaluate(@"
+slots.create:foo
+   slots.return-value:int:57
+slots.vocabulary");
+            Assert.NotEmpty(lambda.Children.Skip(1).First().Children);
+            Assert.NotEmpty(lambda.Children.Skip(1).First().Children.Where(x => x.GetEx<string>() == "foo"));
         }
 
         [Fact]
