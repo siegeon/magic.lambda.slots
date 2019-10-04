@@ -33,7 +33,7 @@ slots.signal:foo
 After evaluation of the above Hyperlambda, the value of the __[slots.signal]__ node will be 57. Notice, if you
 invoke __[slots.create]__ for a slot that has already been created, the old slot will be overwritten with the
 new lambda object you pass into it. Also notice that if you try to invoke a slot that doesn't exist, or you try
-to get it, an exception will be thrown. The __[slots.return-xxx]__ slots, will also throw an exception if you
+to get its content, an exception will be thrown. The __[slots.return-xxx]__ slots, will also throw an exception if you
 attempt to invoke them outside a dynamically created slot somehow.
 
 ## Rational
