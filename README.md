@@ -8,8 +8,8 @@ the following slots.
 
 * __[slots.create]__ - Creates a dynamic slot, that can be invoked with the __[slots.signal]__ slot.
 * __[slots.signal]__ - Invokes a dynamically create slot that has been created with the __[slots.create]__ slot.
-* __[slots.get]__ - Returns the entire lambda object for a slot that has been previously created with the [slots.create] slot.
-* __[slots.delete]__ - Deletes a slot that has been previously created with the [slots.create] slot.
+* __[slots.get]__ - Returns the entire lambda object for a slot that has been previously created with the __[slots.create]__ slot.
+* __[slots.delete]__ - Deletes a slot that has been previously created with the __[slots.create]__ slot.
 * __[slots.return-nodes]__ - Returns a bunch of nodes to caller.
 * __[slots.return-value]__ - Returns a single value to caller.
 
