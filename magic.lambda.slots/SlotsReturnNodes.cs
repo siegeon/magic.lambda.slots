@@ -24,7 +24,7 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            signaler.Peek<SlotResult>("slots.result").Result.AddRange(input.Value == null ? input.Children.ToList() : input.Evaluate());
+            signaler.Peek<Node>("slots.result").AddRange(input.Value == null ? input.Children.ToList() : input.Evaluate());
         }
     }
 }

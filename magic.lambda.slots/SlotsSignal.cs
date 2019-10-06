@@ -26,7 +26,7 @@ namespace magic.lambda.slots
         public void Signal(ISignaler signaler, Node input)
         {
             // Making sure we're able to handle returned values and nodes from slot implementation.
-            var result = new SlotResult(input);
+            var result = new Node();
             signaler.Scope("slots.result", result, () =>
             {
                 // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
@@ -46,8 +46,8 @@ namespace magic.lambda.slots
                 * Simply setting value and children to "slots.result" stack object, since its value
                 * was initially set to its old value during startup of method.
                 */
-                input.Value = result.Result.Value;
-                input.AddRange(result.Result.Children.ToList());
+                input.Value = result.Value;
+                input.AddRange(result.Children.ToList());
             });
         }
     }

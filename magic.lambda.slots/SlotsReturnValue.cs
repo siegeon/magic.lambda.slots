@@ -23,7 +23,7 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            signaler.Peek<SlotResult>("slots.result").Result.Value = input.GetEx<object>();
+            signaler.Peek<Node>("slots.result").Value = input.GetEx<object>();
         }
     }
 }
