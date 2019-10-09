@@ -11,10 +11,10 @@ using magic.signals.contracts;
 namespace magic.lambda.slots
 {
     /// <summary>
-    /// [slots.delete] slot for deleting slot that has been created with the [slots.create] slot.
+    /// [slots.get] slot for retrieving slot that has been created with the [slots.create] slot.
     /// </summary>
-    [Slot(Name = "slots.delete")]
-    public class SlotsDelete : ISlot
+    [Slot(Name = "slots.get")]
+    public class Get : ISlot
     {
         /// <summary>
         /// Slot implementation.
@@ -23,7 +23,8 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            SlotsCreate.DeleteSlot(input.GetEx<string>());
+            // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
+            input.AddRange(Create.GetSlot(input.Get<string>()).Children.ToList());
         }
     }
 }

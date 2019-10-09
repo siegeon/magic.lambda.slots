@@ -3,7 +3,6 @@
  * Licensed as Affero GPL unless an explicitly proprietary license has been obtained.
  */
 
-using System.Linq;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
@@ -11,10 +10,10 @@ using magic.signals.contracts;
 namespace magic.lambda.slots
 {
     /// <summary>
-    /// [slots.vocabulary] slot that will return the names of all dynamically created slots to caller.
+    /// [slots.delete] slot for deleting slot that has been created with the [slots.create] slot.
     /// </summary>
-    [Slot(Name = "slots.vocabulary")]
-    public class SlotsVocabulary : ISlot
+    [Slot(Name = "slots.delete")]
+    public class Delete : ISlot
     {
         /// <summary>
         /// Slot implementation.
@@ -23,8 +22,7 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-            input.AddRange(SlotsCreate.Slots().Select(x => new Node("", x)));
+            Create.DeleteSlot(input.GetEx<string>());
         }
     }
 }

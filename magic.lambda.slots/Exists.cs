@@ -3,7 +3,6 @@
  * Licensed as Affero GPL unless an explicitly proprietary license has been obtained.
  */
 
-using System.Linq;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
@@ -11,10 +10,10 @@ using magic.signals.contracts;
 namespace magic.lambda.slots
 {
     /// <summary>
-    /// [slots.get] slot for retrieving slot that has been created with the [slots.create] slot.
+    /// [slots.exists] slot that will check if a dynamic slot exists or not.
     /// </summary>
-    [Slot(Name = "slots.get")]
-    public class SlotsGet : ISlot
+    [Slot(Name = "slots.exists")]
+    public class Exists : ISlot
     {
         /// <summary>
         /// Slot implementation.
@@ -24,7 +23,7 @@ namespace magic.lambda.slots
         public void Signal(ISignaler signaler, Node input)
         {
             // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-            input.AddRange(SlotsCreate.GetSlot(input.Get<string>()).Children.ToList());
+            input.Value = Create.SlotExists(input.Get<string>());
         }
     }
 }

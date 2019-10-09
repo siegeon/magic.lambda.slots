@@ -7,7 +7,6 @@ using System.Linq;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
-using magic.lambda.slots.utilities;
 
 namespace magic.lambda.slots
 {
@@ -15,7 +14,7 @@ namespace magic.lambda.slots
     /// [slots.return-nodes] slot for returning nodes from some evaluation object.
     /// </summary>
     [Slot(Name = "slots.return-nodes")]
-    public class SlotsReturnNodes : ISlot
+    public class ReturnNodes : ISlot
     {
         /// <summary>
         /// Slot implementation.

@@ -16,7 +16,7 @@ namespace magic.lambda.slots
     /// [slots.create] slot that creates a dynamic slot, that can be invoked using the [slots.signal] slot.
     /// </summary>
     [Slot(Name = "slots.create")]
-    public class SlotsCreate : ISlot
+    public class Create : ISlot
     {
         readonly static Synchronizer<Dictionary<string, Node>> _slots = new Synchronizer<Dictionary<string, Node>>(new Dictionary<string, Node>());
 

@@ -4,11 +4,9 @@
  */
 
 using System.Linq;
-using System.Collections.Generic;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
-using magic.lambda.slots.utilities;
 
 namespace magic.lambda.slots
 {
@@ -16,7 +14,7 @@ namespace magic.lambda.slots
     /// [slots.signal] slot for invoking dynamically created slots, that have been created with the [slots.create] slot.
     /// </summary>
     [Slot(Name = "slots.signal")]
-    public class SlotsSignal : ISlot
+    public class SignalSlot : ISlot
     {
         /// <summary>
         /// Slot implementation.
@@ -30,7 +28,7 @@ namespace magic.lambda.slots
             signaler.Scope("slots.result", result, () =>
             {
                 // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-                var lambda = SlotsCreate.GetSlot(input.Get<string>());
+                var lambda = Create.GetSlot(input.Get<string>());
 
                 // Preparing arguments, if there are any.
                 if (input.Children.Any())
