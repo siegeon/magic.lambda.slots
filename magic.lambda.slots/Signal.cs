@@ -30,7 +30,7 @@ namespace magic.lambda.slots
             signaler.Scope("slots.result", result, () =>
             {
                 // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-                var lambda = Create.GetSlot(input.Get<string>());
+                var lambda = Create.GetSlot(input.GetEx<string>());
 
                 // Preparing arguments, if there are any.
                 if (input.Children.Any())
