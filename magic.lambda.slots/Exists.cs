@@ -23,7 +23,7 @@ namespace magic.lambda.slots
         public void Signal(ISignaler signaler, Node input)
         {
             // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-            input.Value = Create.SlotExists(input.Get<string>());
+            input.Value = Create.SlotExists(input.GetEx<string>());
         }
     }
 }

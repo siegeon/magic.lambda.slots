@@ -64,7 +64,7 @@ namespace magic.lambda.slots
             await signaler.ScopeAsync("slots.result", result, async () =>
             {
                 // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-                var lambda = Create.GetSlot(input.Get<string>());
+                var lambda = Create.GetSlot(input.GetEx<string>());
 
                 // Preparing arguments, if there are any.
                 if (input.Children.Any())
