@@ -24,15 +24,33 @@ namespace magic.lambda.slots
         public void Signal(ISignaler signaler, Node input)
         {
             // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-            var list = Create.Slots()
-                .Select(x => new Node("", x))
-                .ToList();
-            list.Sort((lhs, rhs) => string
-                .Compare(
-                    lhs.Get<string>(),
-                    rhs.Get<string>(),
-                    System.StringComparison.InvariantCulture));
-            input.AddRange(list);
+            var filter = input.GetEx<string>();
+            input.Value = null;
+            if (string.IsNullOrEmpty(filter))
+            {
+                var list = Create.Slots()
+                    .Select(x => new Node("", x))
+                    .ToList();
+                list.Sort((lhs, rhs) => string
+                    .Compare(
+                        lhs.Get<string>(),
+                        rhs.Get<string>(),
+                        System.StringComparison.InvariantCulture));
+                input.AddRange(list);
+            }
+            else
+            {
+                var list = Create.Slots()
+                    .Where(x => x.StartsWith(filter))
+                    .Select(x => new Node("", x))
+                    .ToList();
+                list.Sort((lhs, rhs) => string
+                    .Compare(
+                        lhs.Get<string>(),
+                        rhs.Get<string>(),
+                        System.StringComparison.InvariantCulture));
+                input.AddRange(list);
+            }
         }
     }
 }
