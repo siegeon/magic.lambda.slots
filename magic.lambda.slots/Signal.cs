@@ -71,7 +71,7 @@ namespace magic.lambda.slots
                     lambda.Insert(0, new Node(".arguments", null, input.Children.ToList()));
 
                 // Evaluating lambda of slot.
-                await signaler.SignalAsync("eval", lambda);
+                await signaler.SignalAsync("wait.eval", lambda);
 
                 // Clearing Children collection, since it might contain input parameters.
                 input.Clear();
