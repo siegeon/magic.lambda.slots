@@ -62,6 +62,9 @@ slots.signal:foo
 
 After evaluating the above Hyperlambda, the **[slots.signal]** node will end up having a value of _"57"_.
 
+**Notice** - If your dynamically created slot contains async slot invocations, you will have to invoke
+it async, using the **[wait.slots.signal]** override.
+
 ### slots.get
 
 Returns the entire lambda code for a previously created dynamic slot. Example can be found below.
