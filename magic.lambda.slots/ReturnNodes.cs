@@ -10,6 +10,7 @@ using magic.signals.contracts;
 
 namespace magic.lambda.slots
 {
+    // TODO: Create simpler return keywords, such as e.g. simply [return].
     /// <summary>
     /// [slots.return-nodes] slot for returning nodes from some evaluation object.
     /// </summary>
