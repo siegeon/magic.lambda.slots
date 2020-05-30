@@ -12,10 +12,10 @@ using magic.signals.contracts;
 namespace magic.lambda.slots
 {
     /// <summary>
-    /// [slots.signal] slot for invoking dynamically created slots, that have been created with the [slots.create] slot.
+    /// [signal] slot for invoking dynamically created slots, that have been created with the [slots.create] slot.
     /// </summary>
-    [Slot(Name = "slots.signal")]
-    [Slot(Name = "wait.slots.signal")]
+    [Slot(Name = "signal")]
+    [Slot(Name = "wait.signal")]
     public class SignalSlot : ISlot, ISlotAsync
     {
         /// <summary>

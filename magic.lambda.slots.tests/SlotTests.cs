@@ -17,7 +17,7 @@ namespace magic.lambda.slots.tests
             var lambda = Common.Evaluate(@"
 slots.create:foo
    slots.return-value:int:57
-slots.signal:foo");
+signal:foo");
             Assert.Equal(57, lambda.Children.Skip(1).First().Value);
         }
 
@@ -62,7 +62,7 @@ slots.create:foo
    slots.return-value:int:57
 slots.create:foo
    slots.return-value:int:42
-slots.signal:foo");
+signal:foo");
             Assert.Equal(42, lambda.Children.Skip(2).First().Value);
         }
 
@@ -72,7 +72,7 @@ slots.signal:foo");
             var lambda = Common.Evaluate(@"
 slots.create:foo
    slots.return-value:x:@.arguments/*
-slots.signal:foo
+signal:foo
    foo:int:57");
             Assert.Equal(57, lambda.Children.Skip(1).First().Value);
         }
@@ -85,7 +85,7 @@ slots.create:foo
    slots.return-nodes
       foo1:bar1
       foo2:bar2
-slots.signal:foo");
+signal:foo");
             Assert.Equal(2, lambda.Children.Skip(1).First().Children.Count());
             Assert.Equal("foo1", lambda.Children.Skip(1).First().Children.First().Name);
             Assert.Equal("foo2", lambda.Children.Skip(1).First().Children.Skip(1).First().Name);
@@ -102,7 +102,7 @@ slots.create:foo
       foo1:bar1
       foo2:bar2
    slots.return-nodes:x:-/*
-slots.signal:foo");
+signal:foo");
             Assert.Equal(2, lambda.Children.Skip(1).First().Children.Count());
             Assert.Equal("foo1", lambda.Children.Skip(1).First().Children.First().Name);
             Assert.Equal("foo2", lambda.Children.Skip(1).First().Children.Skip(1).First().Name);
@@ -119,8 +119,8 @@ slots.create:foo
       foo1:bar1
       foo2:bar2
    slots.return-nodes:x:-/*
-slots.signal:foo
-slots.signal:foo");
+signal:foo
+signal:foo");
             Assert.Equal(2, lambda.Children.Skip(1).First().Children.Count());
             Assert.Equal("foo1", lambda.Children.Skip(1).First().Children.First().Name);
             Assert.Equal("foo2", lambda.Children.Skip(1).First().Children.Skip(1).First().Name);

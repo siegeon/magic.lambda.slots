@@ -13,7 +13,7 @@ using magic.lambda.slots.utilities;
 namespace magic.lambda.slots
 {
     /// <summary>
-    /// [slots.create] slot that creates a dynamic slot, that can be invoked using the [slots.signal] slot.
+    /// [slots.create] slot that creates a dynamic slot, that can be invoked using the [signal] slot.
     /// </summary>
     [Slot(Name = "slots.create")]
     public class Create : ISlot
