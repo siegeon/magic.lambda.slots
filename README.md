@@ -11,8 +11,10 @@ the following slots.
 * __[slots.get]__ - Returns the entire lambda object for a slot that has been previously created with the __[slots.create]__ slot.
 * __[slots.delete]__ - Deletes a slot that has been previously created with the __[slots.create]__ slot.
 * __[slots.exists]__ - Returns true of the given slot exists.
-* __[slots.return-nodes]__ - Returns a bunch of nodes to caller from inside of your slot.
-* __[slots.return-value]__ - Returns a single value to caller from inside of your slot.
+* __[return-nodes]__ - Returns a bunch of nodes to caller from inside of your slot.
+* __[return-value]__ - Returns a single value to caller from inside of your slot.
+* __[return]__ - Returns either a list of nodes, or a single value, or both, depending upon the results of its expression,
+or whether or not it has a static value, or a list of nodes.
 * __[slots.vocabulary]__ - Returns the names of all dynamically created slots.
 
 Below is an example of how to create and invoke a slot.
@@ -22,7 +24,7 @@ Below is an example of how to create and invoke a slot.
  * First we create a dynamic slot.
  */
 slots.create:foo
-   slots.return-value:int:57
+   return-value:int:57
 
 /*
  * Then we invoke it.
@@ -42,7 +44,7 @@ Creates a dynamic slot that can be invoked using **[signal]** or **[wait.signal]
 
 ```
 slots.create:foo
-   slots.return-value:int:57
+   return-value:int:57
 ```
 
 Notice, slots aren't serialised in any ways, implying if your web server restarts its process, your previously created
@@ -71,7 +73,7 @@ Returns the entire lambda code for a previously created dynamic slot. Example ca
 
 ```
 slots.create:foo
-   slots.return-value:int:57
+   return-value:int:57
 slots.get:foo
 ```
 
@@ -81,34 +83,34 @@ Deletes a previously created dynamic slot. The following example _will throw an 
 
 ```
 slots.create:foo
-   slots.return-value:int:57
+   return-value:int:57
 slots.delete:foo
 
 // Throws exception, since [foo] no longer exists.
 slots.get:foo
 ```
 
-### slots.return-nodes
+### return-nodes
 
 Returns a bunch of nodes (lambda) from your slot. Can only be invoked from the inside of
 a dynamically created slot. Example below.
 
 ```
 slots.create:foo
-   slots.return-nodes
+   return-nodes
       integer-value:int:57
       string-value:Foo bar
 slots.invoke:foo
 ```
 
-### slots.return-value
+### return-value
 
 Returns a single value from your slot. Can only be invoked from the inside of
 a dynamically created slot. Example below.
 
 ```
 slots.create:foo
-   slots.return-value:This becomes the returned value from your slot
+   return-value:This becomes the returned value from your slot
 slots.invoke:foo
 ```
 
@@ -118,7 +120,7 @@ Returns true if the specified slot exists. Example can be found below.
 
 ```
 slots.create:foo
-   slots.return-value:Blah, blah, blah ...
+   return-value:Blah, blah, blah ...
 slots.exists:foo
 slots.exists:DOES-NOT-EXISTS
 ```

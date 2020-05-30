@@ -10,9 +10,9 @@ using magic.signals.contracts;
 namespace magic.lambda.slots
 {
     /// <summary>
-    /// [slots.return-value] slot for returning a piece of value from some evaluation object.
+    /// [return-value] slot for returning a piece of value from some evaluation object.
     /// </summary>
-    [Slot(Name = "slots.return-value")]
+    [Slot(Name = "return-value")]
     public class ReturnValue : ISlot
     {
         /// <summary>

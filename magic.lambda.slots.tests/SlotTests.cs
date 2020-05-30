@@ -16,7 +16,7 @@ namespace magic.lambda.slots.tests
         {
             var lambda = Common.Evaluate(@"
 slots.create:foo
-   slots.return-value:int:57
+   return-value:int:57
 signal:foo");
             Assert.Equal(57, lambda.Children.Skip(1).First().Value);
         }
@@ -26,7 +26,7 @@ signal:foo");
         {
             var lambda = Common.Evaluate(@"
 slots.create:foo
-   slots.return-value:int:57
+   return-value:int:57
 slots.exists:foo");
             Assert.Equal(true, lambda.Children.Skip(1).First().Value);
         }
@@ -36,7 +36,7 @@ slots.exists:foo");
         {
             var lambda = Common.Evaluate(@"
 slots.create:foo
-   slots.return-value:int:57
+   return-value:int:57
 slots.vocabulary");
             Assert.NotEmpty(lambda.Children.Skip(1).First().Children);
             Assert.NotEmpty(lambda.Children.Skip(1).First().Children.Where(x => x.GetEx<string>() == "foo"));
@@ -59,9 +59,9 @@ slots.get:foo");
         {
             var lambda = Common.Evaluate(@"
 slots.create:foo
-   slots.return-value:int:57
+   return-value:int:57
 slots.create:foo
-   slots.return-value:int:42
+   return-value:int:42
 signal:foo");
             Assert.Equal(42, lambda.Children.Skip(2).First().Value);
         }
@@ -71,10 +71,31 @@ signal:foo");
         {
             var lambda = Common.Evaluate(@"
 slots.create:foo
-   slots.return-value:x:@.arguments/*
+   return-value:x:@.arguments/*
 signal:foo
    foo:int:57");
             Assert.Equal(57, lambda.Children.Skip(1).First().Value);
+        }
+
+        [Fact]
+        public void ReturnValue()
+        {
+            var lambda = Common.Evaluate(@"
+slots.create:foo
+   return:foo
+signal:foo");
+            Assert.Equal("foo", lambda.Children.Skip(1).First().GetEx<string>());
+        }
+
+        [Fact]
+        public void ReturnValueExpression()
+        {
+            var lambda = Common.Evaluate(@"
+slots.create:foo
+   .foo:foo
+   return:x:-
+signal:foo");
+            Assert.Equal("foo", lambda.Children.Skip(1).First().GetEx<string>());
         }
 
         [Fact]
@@ -82,9 +103,59 @@ signal:foo
         {
             var lambda = Common.Evaluate(@"
 slots.create:foo
-   slots.return-nodes
+   return-nodes
       foo1:bar1
       foo2:bar2
+signal:foo");
+            Assert.Equal(2, lambda.Children.Skip(1).First().Children.Count());
+            Assert.Equal("foo1", lambda.Children.Skip(1).First().Children.First().Name);
+            Assert.Equal("foo2", lambda.Children.Skip(1).First().Children.Skip(1).First().Name);
+            Assert.Equal("bar1", lambda.Children.Skip(1).First().Children.First().Value);
+            Assert.Equal("bar2", lambda.Children.Skip(1).First().Children.Skip(1).First().Value);
+        }
+
+        [Fact]
+        public void ReturnNodesImplicitly()
+        {
+            var lambda = Common.Evaluate(@"
+slots.create:foo
+   return
+      foo1:bar1
+      foo2:bar2
+signal:foo");
+            Assert.Equal(2, lambda.Children.Skip(1).First().Children.Count());
+            Assert.Equal("foo1", lambda.Children.Skip(1).First().Children.First().Name);
+            Assert.Equal("foo2", lambda.Children.Skip(1).First().Children.Skip(1).First().Name);
+            Assert.Equal("bar1", lambda.Children.Skip(1).First().Children.First().Value);
+            Assert.Equal("bar2", lambda.Children.Skip(1).First().Children.Skip(1).First().Value);
+        }
+
+        [Fact]
+        public void ReturnNodesAndValueImplicitly()
+        {
+            var lambda = Common.Evaluate(@"
+slots.create:foo
+   return:foo
+      foo1:bar1
+      foo2:bar2
+signal:foo");
+            Assert.Equal(2, lambda.Children.Skip(1).First().Children.Count());
+            Assert.Equal("foo", lambda.Children.Skip(1).First().GetEx<string>());
+            Assert.Equal("foo1", lambda.Children.Skip(1).First().Children.First().Name);
+            Assert.Equal("foo2", lambda.Children.Skip(1).First().Children.Skip(1).First().Name);
+            Assert.Equal("bar1", lambda.Children.Skip(1).First().Children.First().Value);
+            Assert.Equal("bar2", lambda.Children.Skip(1).First().Children.Skip(1).First().Value);
+        }
+
+        [Fact]
+        public void ReturnNodesImpicitlyExpression()
+        {
+            var lambda = Common.Evaluate(@"
+slots.create:foo
+   .foo
+      foo1:bar1
+      foo2:bar2
+   return:x:-/*
 signal:foo");
             Assert.Equal(2, lambda.Children.Skip(1).First().Children.Count());
             Assert.Equal("foo1", lambda.Children.Skip(1).First().Children.First().Name);
@@ -101,7 +172,7 @@ slots.create:foo
    .result
       foo1:bar1
       foo2:bar2
-   slots.return-nodes:x:-/*
+   return-nodes:x:-/*
 signal:foo");
             Assert.Equal(2, lambda.Children.Skip(1).First().Children.Count());
             Assert.Equal("foo1", lambda.Children.Skip(1).First().Children.First().Name);
@@ -118,7 +189,7 @@ slots.create:foo
    .result
       foo1:bar1
       foo2:bar2
-   slots.return-nodes:x:-/*
+   return-nodes:x:-/*
 signal:foo
 signal:foo");
             Assert.Equal(2, lambda.Children.Skip(1).First().Children.Count());
