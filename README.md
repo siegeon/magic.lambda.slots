@@ -7,7 +7,7 @@ Provides the ability to create, edit and delete dynamic slots for [Magic](https:
 the following slots.
 
 * __[signal]__ - Invokes a dynamically create slot that has been created with the __[slots.create]__ slot. Provides an async (wait.) overload.
-* __[slots.create]__ - Creates a dynamic slot, that can be invoked with the __[slots.signal]__ slot.
+* __[slots.create]__ - Creates a dynamic slot, that can be invoked with the __[signal]__ slot.
 * __[slots.get]__ - Returns the entire lambda object for a slot that has been previously created with the __[slots.create]__ slot.
 * __[slots.delete]__ - Deletes a slot that has been previously created with the __[slots.create]__ slot.
 * __[slots.exists]__ - Returns true of the given slot exists.
