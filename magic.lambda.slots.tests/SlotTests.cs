@@ -4,8 +4,10 @@
  */
 
 using System.Linq;
+using System.Collections.Generic;
 using Xunit;
 using magic.node.extensions;
+using System.Threading.Tasks;
 
 namespace magic.lambda.slots.tests
 {
@@ -19,6 +21,26 @@ slots.create:foo
    return-value:int:57
 signal:foo");
             Assert.Equal(57, lambda.Children.Skip(1).First().Value);
+        }
+
+        [Fact]
+        public async Task CreateSlotAsync()
+        {
+            var lambda = await Common.EvaluateAsync(@"
+slots.create:foo
+   return-value:int:57
+wait.signal:foo");
+            Assert.Equal(57, lambda.Children.Skip(1).First().Value);
+        }
+
+        [Fact]
+        public void CreateSlotDelete_Throws()
+        {
+            Assert.Throws<KeyNotFoundException>(() => Common.Evaluate(@"
+slots.create:foo
+   return-value:int:57
+slots.delete:foo
+signal:foo"));
         }
 
         [Fact]
@@ -40,6 +62,16 @@ slots.create:foo
 slots.vocabulary");
             Assert.NotEmpty(lambda.Children.Skip(1).First().Children);
             Assert.NotEmpty(lambda.Children.Skip(1).First().Children.Where(x => x.GetEx<string>() == "foo"));
+        }
+
+        [Fact]
+        public void CreateSlotVocabularyWithFilter()
+        {
+            var lambda = Common.Evaluate(@"
+slots.create:foo
+   return-value:int:57
+slots.vocabulary:not-foo");
+            Assert.Empty(lambda.Children.Skip(1).First().Children);
         }
 
         [Fact]
