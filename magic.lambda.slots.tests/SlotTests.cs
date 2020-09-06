@@ -65,6 +65,23 @@ slots.vocabulary");
         }
 
         [Fact]
+        public void CreateSlotVocabularySorted()
+        {
+            var lambda = Common.Evaluate(@"
+slots.create:fooBB
+   return-value:int:57
+slots.create:fooAA
+   return-value:int:57
+slots.vocabulary");
+            Assert.NotEmpty(lambda.Children.Skip(1).First().Children);
+            Assert.NotEmpty(lambda.Children.Skip(2).First().Children.Where(x => x.GetEx<string>() == "fooAA"));
+            Assert.NotEmpty(lambda.Children.Skip(2).First().Children.Where(x => x.GetEx<string>() == "fooBB"));
+            Assert.Equal("foo", lambda.Children.Skip(2).First().Children.First().Get<string>());
+            Assert.Equal("fooAA", lambda.Children.Skip(2).First().Children.Skip(1).First().Get<string>());
+            Assert.Equal("fooBB", lambda.Children.Skip(2).First().Children.Skip(2).First().Get<string>());
+        }
+
+        [Fact]
         public void CreateSlotVocabularyWithFilter()
         {
             var lambda = Common.Evaluate(@"
@@ -105,6 +122,17 @@ signal:foo");
 slots.create:foo
    return-value:x:@.arguments/*
 signal:foo
+   foo:int:57");
+            Assert.Equal(57, lambda.Children.Skip(1).First().Value);
+        }
+
+        [Fact]
+        public async Task ArgumentPassingAsync()
+        {
+            var lambda = await Common.EvaluateAsync(@"
+slots.create:foo
+   return-value:x:@.arguments/*
+wait.signal:foo
    foo:int:57");
             Assert.Equal(57, lambda.Children.Skip(1).First().Value);
         }
