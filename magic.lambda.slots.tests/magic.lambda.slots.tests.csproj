@@ -20,15 +20,10 @@
     </PackageReference>
     <PackageReference Include="magic.lambda" Version="8.1.*" />
     <PackageReference Include="magic.signals" Version="8.1.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\magic.lambda.slots\magic.lambda.slots.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.Extensions.Configuration">
-    </Reference>
   </ItemGroup>
 </Project>
