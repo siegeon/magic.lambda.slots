@@ -1,7 +1,7 @@
 
 # Magic Lambda Slots
 
-[![Build status](https://travis-ci.org/polterguy/magic.lambda.slots.svg?master)](https://travis-ci.org/polterguy/magic.lambda.slots)
+[![Build status](https://travis-ci.com/polterguy/magic.lambda.slots.svg?master)](https://travis-ci.com/polterguy/magic.lambda.slots)
 
 Provides the ability to create, edit and delete dynamic slots for [Magic](https://github.com/polterguy.magic). More specifically, provides
 the following slots.
