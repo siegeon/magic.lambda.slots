@@ -15,7 +15,6 @@ namespace magic.lambda.slots
     /// [signal] slot for invoking dynamically created slots, that have been created with the [slots.create] slot.
     /// </summary>
     [Slot(Name = "signal")]
-    [Slot(Name = "wait.signal")]
     public class SignalSlot : ISlot, ISlotAsync
     {
         /// <summary>
@@ -71,7 +70,7 @@ namespace magic.lambda.slots
                     lambda.Insert(0, new Node(".arguments", null, input.Children.ToList()));
 
                 // Evaluating lambda of slot.
-                await signaler.SignalAsync("wait.eval", lambda);
+                await signaler.SignalAsync("eval", lambda);
 
                 // Clearing Children collection, since it might contain input parameters.
                 input.Clear();

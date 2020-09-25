@@ -29,7 +29,7 @@ signal:foo");
             var lambda = await Common.EvaluateAsync(@"
 slots.create:foo
    return-value:int:57
-wait.signal:foo");
+signal:foo");
             Assert.Equal(57, lambda.Children.Skip(1).First().Value);
         }
 
@@ -149,7 +149,7 @@ signal:foo
             var lambda = await Common.EvaluateAsync(@"
 slots.create:foo
    return-value:x:@.arguments/*
-wait.signal:foo
+signal:foo
    foo:int:57");
             Assert.Equal(57, lambda.Children.Skip(1).First().Value);
         }
