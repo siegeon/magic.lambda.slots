@@ -3,8 +3,10 @@
  * See the enclosed LICENSE file for details.
  */
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
@@ -28,23 +30,14 @@ namespace magic.lambda.slots
             var result = new Node();
             signaler.Scope("slots.result", result, () =>
             {
-                // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-                var lambda = Create.GetSlot(input.GetEx<string>());
+                // Evaluating lambda of slot, making sure we temporary clear any existing [whitelist] declarations.
+                var lambda = GetLambda(signaler, input);
+                signaler.Scope("whitelist", null, () =>
+                {
+                    signaler.Signal("eval", lambda);
+                });
 
-                // Preparing arguments, if there are any.
-                if (input.Children.Any())
-                    lambda.Insert(0, new Node(".arguments", null, input.Children.ToList()));
-
-                // Evaluating lambda of slot.
-                signaler.Signal("eval", lambda);
-
-                // Clearing Children collection, since it might contain input parameters.
                 input.Clear();
-
-                /*
-                * Simply setting value and children to "slots.result" stack object, since its value
-                * was initially set to its old value during startup of method.
-                */
                 input.Value = result.Value;
                 input.AddRange(result.Children.ToList());
             });
@@ -62,26 +55,36 @@ namespace magic.lambda.slots
             var result = new Node();
             await signaler.ScopeAsync("slots.result", result, async () =>
             {
-                // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-                var lambda = Create.GetSlot(input.GetEx<string>());
+                // Evaluating lambda of slot, making sure we temporary clear any existing [whitelist] declarations.
+                var lambda = GetLambda(signaler, input);
+                await signaler.ScopeAsync("whitelist", null, async () =>
+                {
+                    await signaler.SignalAsync("eval", lambda);
+                });
 
-                // Preparing arguments, if there are any.
-                if (input.Children.Any())
-                    lambda.Insert(0, new Node(".arguments", null, input.Children.ToList()));
-
-                // Evaluating lambda of slot.
-                await signaler.SignalAsync("eval", lambda);
-
-                // Clearing Children collection, since it might contain input parameters.
                 input.Clear();
-
-                /*
-                * Simply setting value and children to "slots.result" stack object, since its value
-                * was initially set to its old value during startup of method.
-                */
                 input.Value = result.Value;
                 input.AddRange(result.Children.ToList());
             });
         }
+
+        #region [ -- Private helper methods -- ]
+
+        Node GetLambda(ISignaler signaler, Node input)
+        {
+            var name = input.GetEx<string>();
+            var whitelist = signaler.Peek<List<Node>>("whitelist");
+            if (whitelist != null && !whitelist.Any(x => x.Name == "signal" && x.Get<string>() == name))
+                throw new ArgumentException($"Dynamic slot [{name}] does not exist in scope");
+            var lambda = Create.GetSlot(name);
+
+            // Preparing arguments, if there are any.
+            if (input.Children.Any())
+                lambda.Insert(0, new Node(".arguments", null, input.Children.ToList()));
+
+            return lambda;
+        }
+
+        #endregion
     }
 }

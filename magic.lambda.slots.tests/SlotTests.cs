@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using Xunit;
 using magic.node.extensions;
 using System.Threading.Tasks;
+using System;
 
 namespace magic.lambda.slots.tests
 {
@@ -106,6 +107,122 @@ slots.create:foo
    return-value:int:57
 slots.vocabulary:not-foo");
             Assert.Empty(lambda.Children.Skip(1).First().Children);
+        }
+
+        [Fact]
+        public void CreateSlotVocabularyWhitelist()
+        {
+            var lambda = Common.Evaluate(@"
+.result
+slots.create:fxoo1
+   return-value:int:42
+slots.create:fxoo2
+   return-value:int:57
+whitelist
+   vocabulary
+      add
+      slots.vocabulary
+      signal:fxoo1
+   .lambda
+      add:x:@.result
+         slots.vocabulary");
+            Assert.Single(lambda.Children.First().Children);
+            Assert.Equal("fxoo1", lambda.Children.First().Children.First().Value);
+        }
+
+        [Fact]
+        public async Task CreateSlotVocabularyWhitelist_Async()
+        {
+            var lambda = await Common.EvaluateAsync(@"
+.result
+slots.create:fxoo1
+   return-value:int:42
+slots.create:fxoo2
+   return-value:int:57
+whitelist
+   vocabulary
+      add
+      slots.vocabulary
+      signal:fxoo1
+   .lambda
+      add:x:@.result
+         slots.vocabulary");
+            Assert.Single(lambda.Children.First().Children);
+            Assert.Equal("fxoo1", lambda.Children.First().Children.First().Value);
+        }
+
+        [Fact]
+        public void CreateSlotVocabularyWhitelist_Throws()
+        {
+            Assert.Throws<ArgumentException>(() => Common.Evaluate(@"
+.result
+slots.create:fxoo1
+   return-value:int:42
+slots.create:fxoo2
+   return-value:int:57
+whitelist
+   vocabulary
+      set-value
+      signal:fxoo1
+   .lambda
+      set-value:x:@.result
+         signal:fxoo2"));
+        }
+
+        [Fact]
+        public async Task CreateSlotVocabularyWhitelist_Async_Throws()
+        {
+            await Assert.ThrowsAsync<ArgumentException>(async () => await Common.EvaluateAsync(@"
+.result
+slots.create:fxoo1
+   return-value:int:42
+slots.create:fxoo2
+   return-value:int:57
+whitelist
+   vocabulary
+      set-value
+      signal:fxoo1
+   .lambda
+      set-value:x:@.result
+         signal:fxoo2"));
+        }
+
+        [Fact]
+        public void CreateSlotVocabularyWhitelist_Succeeds()
+        {
+            var lambda = Common.Evaluate(@"
+.result
+slots.create:fxoo1
+   return-value:int:42
+slots.create:fxoo2
+   return-value:int:57
+whitelist
+   vocabulary
+      set-value
+      signal:fxoo1
+   .lambda
+      set-value:x:@.result
+         signal:fxoo1");
+            Assert.Equal(42, lambda.Children.First().Value);
+        }
+
+        [Fact]
+        public async Task CreateSlotVocabularyWhitelist_Async_Succeeds()
+        {
+            var lambda = await Common.EvaluateAsync(@"
+.result
+slots.create:fxoo1
+   return-value:int:42
+slots.create:fxoo2
+   return-value:int:57
+whitelist
+   vocabulary
+      set-value
+      signal:fxoo1
+   .lambda
+      set-value:x:@.result
+         signal:fxoo1");
+            Assert.Equal(42, lambda.Children.First().Value);
         }
 
         [Fact]

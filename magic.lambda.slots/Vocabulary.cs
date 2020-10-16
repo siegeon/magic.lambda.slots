@@ -4,6 +4,7 @@
  */
 
 using System.Linq;
+using System.Collections.Generic;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
@@ -36,7 +37,10 @@ namespace magic.lambda.slots
                         lhs.Get<string>(),
                         rhs.Get<string>(),
                         System.StringComparison.InvariantCulture));
-                input.AddRange(list);
+                var whitelist = signaler.Peek<List<Node>>("whitelist");
+                input.AddRange(list
+                    .Where(x => whitelist == null ||
+                        whitelist.Any(x2 => x2.Name == "signal" && x2.Get<string>() == x.Get<string>())));
             }
             else
             {
@@ -49,7 +53,9 @@ namespace magic.lambda.slots
                         lhs.Get<string>(),
                         rhs.Get<string>(),
                         System.StringComparison.InvariantCulture));
-                input.AddRange(list);
+                var whitelist = signaler.Peek<List<Node>>("whitelist");
+                input.AddRange(list.Where(x => whitelist == null ||
+                    whitelist.Any(x2 => x2.Name == "signal" && x2.Get<string>() == x.Get<string>())));
             }
         }
     }
