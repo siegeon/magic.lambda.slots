@@ -10,7 +10,7 @@
     <Description>Helper slots for Magic, to allow you to dynamically create dynamic slots in your own Hyperlambda. To use package go to https://polterguy.github.io</Description>
     <PackageProjectUrl>https://github.com/polterguy/magic.lambda.slots</PackageProjectUrl>
     <PackOnBuild>true</PackOnBuild>
-    <PackageVersion>8.4.1</PackageVersion>
+    <PackageVersion>8.4.2</PackageVersion>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/polterguy/magic.lambda.slots.git</RepositoryUrl>
