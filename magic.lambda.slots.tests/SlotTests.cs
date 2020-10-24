@@ -118,14 +118,16 @@ slots.create:fxoo1
    return-value:int:42
 slots.create:fxoo2
    return-value:int:57
-whitelist
-   vocabulary
-      add
-      slots.vocabulary
-      signal:fxoo1
-   .lambda
-      add:x:@.result
-         slots.vocabulary");
+add:x:@.result
+   whitelist
+      vocabulary
+         return-nodes
+         slots.vocabulary
+         signal:fxoo1
+      .lambda
+         slots.vocabulary
+         return-nodes:x:-/*
+");
             Assert.Single(lambda.Children.First().Children);
             Assert.Equal("fxoo1", lambda.Children.First().Children.First().Value);
         }
@@ -139,14 +141,16 @@ slots.create:fxoo1
    return-value:int:42
 slots.create:fxoo2
    return-value:int:57
-whitelist
-   vocabulary
-      add
-      slots.vocabulary
-      signal:fxoo1
-   .lambda
-      add:x:@.result
-         slots.vocabulary");
+add:x:@.result
+   whitelist
+      vocabulary
+         return-nodes
+         slots.vocabulary
+         signal:fxoo1
+      .lambda
+         slots.vocabulary
+         return-nodes:x:-/*
+");
             Assert.Single(lambda.Children.First().Children);
             Assert.Equal("fxoo1", lambda.Children.First().Children.First().Value);
         }
@@ -196,13 +200,15 @@ slots.create:fxoo1
    return-value:int:42
 slots.create:fxoo2
    return-value:int:57
-whitelist
-   vocabulary
-      set-value
-      signal:fxoo1
-   .lambda
-      set-value:x:@.result
-         signal:fxoo1");
+set-value:x:@.result
+   whitelist
+      vocabulary
+         return
+         signal:fxoo1
+      .lambda
+         signal:fxoo1
+         return:x:-
+");
             Assert.Equal(42, lambda.Children.First().Value);
         }
 
@@ -215,13 +221,17 @@ slots.create:fxoo1
    return-value:int:42
 slots.create:fxoo2
    return-value:int:57
-whitelist
-   vocabulary
-      set-value
-      signal:fxoo1
-   .lambda
-      set-value:x:@.result
-         signal:fxoo1");
+set-value:x:@.result
+   whitelist
+      vocabulary
+         set-value
+         signal:fxoo1
+         return
+      .lambda
+         set-value:x:+
+            signal:fxoo1
+         return
+");
             Assert.Equal(42, lambda.Children.First().Value);
         }
 
