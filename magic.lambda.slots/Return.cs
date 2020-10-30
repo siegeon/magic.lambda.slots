@@ -39,7 +39,7 @@ namespace magic.lambda.slots
                     if (expResult.Count == 1)
                         result.Value = expResult.First().Value;
                     else if (expResult.Count > 1)
-                        result.AddRange(expResult);
+                        result.AddRange(expResult.Select(x => x.Clone()));
                 }
                 else
                 {
