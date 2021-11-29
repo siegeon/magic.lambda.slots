@@ -3,11 +3,11 @@
  */
 
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Xunit;
 using magic.node.extensions;
-using System.Threading.Tasks;
-using System;
+using magic.lambda.exceptions;
 
 namespace magic.lambda.slots.tests
 {
@@ -157,7 +157,7 @@ add:x:@.result
         [Fact]
         public void CreateSlotVocabularyWhitelist_Throws()
         {
-            Assert.Throws<ArgumentException>(() => Common.Evaluate(@"
+            Assert.Throws<HyperlambdaException>(() => Common.Evaluate(@"
 .result
 slots.create:fxoo1
    return-value:int:42
@@ -175,7 +175,7 @@ whitelist
         [Fact]
         public async Task CreateSlotVocabularyWhitelist_Async_Throws()
         {
-            await Assert.ThrowsAsync<ArgumentException>(async () => await Common.EvaluateAsync(@"
+            await Assert.ThrowsAsync<HyperlambdaException>(async () => await Common.EvaluateAsync(@"
 .result
 slots.create:fxoo1
    return-value:int:42
