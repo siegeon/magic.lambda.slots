@@ -9,14 +9,31 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using magic.node;
+using magic.node.contracts;
 using magic.signals.services;
 using magic.signals.contracts;
+using magic.lambda.caching.helpers;
 using magic.node.extensions.hyperlambda;
 
 namespace magic.lambda.slots.tests
 {
     public static class Common
     {
+        private class RootResolver : IRootResolver
+        {
+            public string RootFolder => AppDomain.CurrentDomain.BaseDirectory;
+
+            public string AbsolutePath(string path)
+            {
+                return RootFolder + path.TrimStart(new char[] { '/', '\\' });
+            }
+
+            public string RelativePath(string path)
+            {
+                return path.Substring(RootFolder.Length - 1);
+            }
+        }
+
         static public Node Evaluate(string hl)
         {
             var services = Initialize();
@@ -37,12 +54,16 @@ namespace magic.lambda.slots.tests
 
         #region [ -- Private helper methods -- ]
 
+        readonly static MagicMemoryCache _cache = new MagicMemoryCache();
+
         static IServiceProvider Initialize()
         {
             var configuration = new ConfigurationBuilder().Build();
             var services = new ServiceCollection();
             services.AddTransient<IConfiguration>((svc) => configuration);
             services.AddTransient<ISignaler, Signaler>();
+            services.AddSingleton<IMagicMemoryCache>((svc) => _cache);
+            services.AddTransient<IRootResolver, RootResolver>();
             var types = new SignalsProvider(InstantiateAllTypes<ISlot>(services));
             services.AddTransient<ISignalsProvider>((svc) => types);
             var provider = services.BuildServiceProvider();

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
+using magic.lambda.caching.helpers;
 
 namespace magic.lambda.slots
 {
@@ -16,6 +17,17 @@ namespace magic.lambda.slots
     [Slot(Name = "slots.vocabulary")]
     public class Vocabulary : ISlot
     {
+        readonly IMagicMemoryCache _cache;
+
+        /// <summary>
+        /// Creates an instance of your type.
+        /// </summary>
+        /// <param name="cache">Cache implementation to use for actually storing slots.</param>
+        public Vocabulary(IMagicMemoryCache cache)
+        {
+            _cache = cache;
+        }
+
         /// <summary>
         /// Slot implementation.
         /// </summary>
@@ -23,39 +35,17 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-            var filter = input.GetEx<string>();
+            var filter = ".slot" + input.GetEx<string>();
             input.Value = null;
-            if (string.IsNullOrEmpty(filter))
-            {
-                var list = Create.Slots()
-                    .Select(x => new Node("", x))
-                    .ToList();
-                list.Sort((lhs, rhs) => string
-                    .Compare(
-                        lhs.Get<string>(),
-                        rhs.Get<string>(),
-                        System.StringComparison.InvariantCulture));
-                var whitelist = signaler.Peek<List<Node>>("whitelist");
-                input.AddRange(list
-                    .Where(x => whitelist == null ||
-                        whitelist.Any(x2 => x2.Name == "signal" && x2.Get<string>() == x.Get<string>())));
-            }
-            else
-            {
-                var list = Create.Slots()
-                    .Where(x => x.StartsWith(filter))
-                    .Select(x => new Node("", x))
-                    .ToList();
-                list.Sort((lhs, rhs) => string
-                    .Compare(
-                        lhs.Get<string>(),
-                        rhs.Get<string>(),
-                        System.StringComparison.InvariantCulture));
-                var whitelist = signaler.Peek<List<Node>>("whitelist");
-                input.AddRange(list.Where(x => whitelist == null ||
-                    whitelist.Any(x2 => x2.Name == "signal" && x2.Get<string>() == x.Get<string>())));
-            }
+            var list = _cache
+                .Items(filter)
+                .Select(x => x.Key.Substring(5))
+                .ToList();
+            list.Sort((lhs, rhs) => string.Compare(lhs, rhs, System.StringComparison.InvariantCulture));
+            var whitelist = signaler.Peek<List<Node>>("whitelist");
+            input.AddRange(list
+                .Where(x => whitelist == null || whitelist.Any(x2 => x2.Name == "signal" && x2.Get<string>() == x))
+                .Select(x => new Node("", x)));
         }
     }
 }

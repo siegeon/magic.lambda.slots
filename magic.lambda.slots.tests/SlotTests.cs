@@ -2,12 +2,11 @@
  * Magic Cloud, copyright Aista, Ltd. See the attached LICENSE file for details.
  */
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using Xunit;
 using magic.node.extensions;
-using magic.lambda.exceptions;
 
 namespace magic.lambda.slots.tests
 {
@@ -36,7 +35,7 @@ signal:foo");
         [Fact]
         public void CreateSlotDelete_Throws()
         {
-            Assert.Throws<KeyNotFoundException>(() => Common.Evaluate(@"
+            Assert.Throws<NullReferenceException>(() => Common.Evaluate(@"
 slots.create:foo
    return-value:int:57
 slots.delete:foo

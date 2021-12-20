@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
+using magic.lambda.caching.helpers;
 
 namespace magic.lambda.slots
 {
@@ -17,6 +18,17 @@ namespace magic.lambda.slots
     [Slot(Name = "signal")]
     public class SignalSlot : ISlot, ISlotAsync
     {
+        readonly IMagicMemoryCache _cache;
+
+        /// <summary>
+        /// Creates an instance of your type.
+        /// </summary>
+        /// <param name="cache">Cache implementation to use for actually storing slots.</param>
+        public SignalSlot(IMagicMemoryCache cache)
+        {
+            _cache = cache;
+        }
+
         /// <summary>
         /// Slot implementation.
         /// </summary>
@@ -74,7 +86,7 @@ namespace magic.lambda.slots
             var whitelist = signaler.Peek<List<Node>>("whitelist");
             if (whitelist != null && !whitelist.Any(x => x.Name == "signal" && x.Get<string>() == name))
                 throw new HyperlambdaException($"Dynamic slot [{name}] does not exist in scope");
-            var lambda = Create.GetSlot(name);
+            var lambda = (_cache.Get(".slot" + name) as Node).Clone();
 
             // Preparing arguments, if there are any.
             if (input.Children.Any())

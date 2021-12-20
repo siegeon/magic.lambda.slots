@@ -6,6 +6,7 @@ using System.Linq;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
+using magic.lambda.caching.helpers;
 
 namespace magic.lambda.slots
 {
@@ -15,6 +16,17 @@ namespace magic.lambda.slots
     [Slot(Name = "slots.get")]
     public class Get : ISlot
     {
+        readonly IMagicMemoryCache _cache;
+
+        /// <summary>
+        /// Creates an instance of your type.
+        /// </summary>
+        /// <param name="cache">Cache implementation to use for actually storing slots.</param>
+        public Get(IMagicMemoryCache cache)
+        {
+            _cache = cache;
+        }
+
         /// <summary>
         /// Slot implementation.
         /// </summary>
@@ -22,8 +34,8 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            // Retrieving slot's lambda, no reasons to clone, GetSlot will clone.
-            input.AddRange(Create.GetSlot(input.GetEx<string>()).Children.ToList());
+            var lambda = (_cache.Get(".slot" + input.Get<string>()) as Node).Clone();
+            input.AddRange(lambda.Children.ToList());
         }
     }
 }

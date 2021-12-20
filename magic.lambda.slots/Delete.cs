@@ -5,6 +5,7 @@
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
+using magic.lambda.caching.helpers;
 
 namespace magic.lambda.slots
 {
@@ -14,6 +15,17 @@ namespace magic.lambda.slots
     [Slot(Name = "slots.delete")]
     public class Delete : ISlot
     {
+        readonly IMagicMemoryCache _cache;
+
+        /// <summary>
+        /// Creates an instance of your type.
+        /// </summary>
+        /// <param name="cache">Cache implementation to use for actually storing slots.</param>
+        public Delete(IMagicMemoryCache cache)
+        {
+            _cache = cache;
+        }
+
         /// <summary>
         /// Slot implementation.
         /// </summary>
@@ -21,7 +33,7 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            Create.DeleteSlot(input.GetEx<string>());
+            _cache.Remove(".slot" + input.Get<string>());
         }
     }
 }

@@ -2,12 +2,11 @@
  * Magic Cloud, copyright Aista, Ltd. See the attached LICENSE file for details.
  */
 
-using System.Linq;
-using System.Collections.Generic;
+using System;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
-using magic.lambda.slots.utilities;
+using magic.lambda.caching.helpers;
 
 namespace magic.lambda.slots
 {
@@ -17,7 +16,16 @@ namespace magic.lambda.slots
     [Slot(Name = "slots.create")]
     public class Create : ISlot
     {
-        readonly static Synchronizer<Dictionary<string, Node>> _slots = new Synchronizer<Dictionary<string, Node>>(new Dictionary<string, Node>());
+        readonly IMagicMemoryCache _cache;
+
+        /// <summary>
+        /// Creates an instance of your type.
+        /// </summary>
+        /// <param name="cache">Cache implementation to use for actually storing slots.</param>
+        public Create(IMagicMemoryCache cache)
+        {
+            _cache = cache;
+        }
 
         /// <summary>
         /// Slot implementation.
@@ -26,43 +34,10 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            _slots.Write((slots) => slots[input.GetEx<string>()] = input.Clone());
+            _cache.Upsert(
+                ".slot" + input.Get<string>(),
+                input.Clone(),
+                DateTime.MaxValue);
         }
-
-        #region [ -- Private and internal helper methods -- ]
-
-        /*
-         * Returns the named slot to caller.
-         */
-        internal static Node GetSlot(string name)
-        {
-            return _slots.Read((slots) => slots[name].Clone());
-        }
-
-        /*
-         * Returns true to caller if the named slot exists.
-         */
-        internal static bool SlotExists(string name)
-        {
-            return _slots.Read((slots) => slots.ContainsKey(name));
-        }
-
-        /*
-         * Returns the names of all slots that exists in the system.
-         */
-        internal static IEnumerable<string> Slots()
-        {
-            return _slots.Read((slots) => slots.Keys.ToList());
-        }
-
-        /*
-         * Deletes the named slot.
-         */
-        internal static void DeleteSlot(string name)
-        {
-            _slots.Write((slots) => slots.Remove(name));
-        }
-
-        #endregion
     }
 }
