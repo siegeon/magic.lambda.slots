@@ -37,7 +37,7 @@ namespace magic.lambda.slots
             _cache.Upsert(
                 input.Get<string>(),
                 input.Clone(),
-                DateTime.MaxValue,
+                DateTime.UtcNow.AddYears(100),
                 true);
         }
     }
