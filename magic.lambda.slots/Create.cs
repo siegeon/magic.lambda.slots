@@ -35,9 +35,10 @@ namespace magic.lambda.slots
         public void Signal(ISignaler signaler, Node input)
         {
             _cache.Upsert(
-                ".slot" + input.Get<string>(),
+                input.Get<string>(),
                 input.Clone(),
-                DateTime.MaxValue);
+                DateTime.MaxValue,
+                true);
         }
     }
 }

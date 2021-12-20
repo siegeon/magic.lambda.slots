@@ -35,11 +35,11 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            var filter = ".slot" + input.GetEx<string>();
+            var filter = input.GetEx<string>();
             input.Value = null;
             var list = _cache
-                .Items(filter)
-                .Select(x => x.Key.Substring(5))
+                .Items(filter, true)
+                .Select(x => x.Key)
                 .ToList();
             list.Sort((lhs, rhs) => string.Compare(lhs, rhs, System.StringComparison.InvariantCulture));
             var whitelist = signaler.Peek<List<Node>>("whitelist");

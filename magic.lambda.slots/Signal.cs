@@ -83,10 +83,12 @@ namespace magic.lambda.slots
         Node GetLambda(ISignaler signaler, Node input)
         {
             var name = input.GetEx<string>();
+
             var whitelist = signaler.Peek<List<Node>>("whitelist");
             if (whitelist != null && !whitelist.Any(x => x.Name == "signal" && x.Get<string>() == name))
                 throw new HyperlambdaException($"Dynamic slot [{name}] does not exist in scope");
-            var lambda = (_cache.Get(".slot" + name) as Node).Clone();
+
+            var lambda = (_cache.Get(name, true) as Node).Clone();
 
             // Preparing arguments, if there are any.
             if (input.Children.Any())

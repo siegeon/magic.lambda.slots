@@ -13,6 +13,8 @@ using magic.node.contracts;
 using magic.signals.services;
 using magic.signals.contracts;
 using magic.lambda.caching.helpers;
+using magic.lambda.caching.services;
+using magic.lambda.caching.contracts;
 using magic.node.extensions.hyperlambda;
 
 namespace magic.lambda.slots.tests
@@ -60,7 +62,7 @@ namespace magic.lambda.slots.tests
             var services = new ServiceCollection();
             services.AddTransient<IConfiguration>((svc) => configuration);
             services.AddTransient<ISignaler, Signaler>();
-            services.AddSingleton<IMagicMemoryCache, MagicMemoryCache>();
+            services.AddSingleton<IMagicCache, MagicMemoryCache>();
             services.AddTransient<IRootResolver, RootResolver>();
             var types = new SignalsProvider(InstantiateAllTypes<ISlot>(services));
             services.AddTransient<ISignalsProvider>((svc) => types);
