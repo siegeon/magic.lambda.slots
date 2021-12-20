@@ -54,15 +54,13 @@ namespace magic.lambda.slots.tests
 
         #region [ -- Private helper methods -- ]
 
-        readonly static MagicMemoryCache _cache = new MagicMemoryCache();
-
         static IServiceProvider Initialize()
         {
             var configuration = new ConfigurationBuilder().Build();
             var services = new ServiceCollection();
             services.AddTransient<IConfiguration>((svc) => configuration);
             services.AddTransient<ISignaler, Signaler>();
-            services.AddSingleton<IMagicMemoryCache>((svc) => _cache);
+            services.AddSingleton<IMagicMemoryCache, MagicMemoryCache>();
             services.AddTransient<IRootResolver, RootResolver>();
             var types = new SignalsProvider(InstantiateAllTypes<ISlot>(services));
             services.AddTransient<ISignalsProvider>((svc) => types);

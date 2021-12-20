@@ -75,9 +75,8 @@ slots.vocabulary");
             Assert.NotEmpty(lambda.Children.Skip(1).First().Children);
             Assert.NotEmpty(lambda.Children.Skip(2).First().Children.Where(x => x.GetEx<string>() == "fooAA"));
             Assert.NotEmpty(lambda.Children.Skip(2).First().Children.Where(x => x.GetEx<string>() == "fooBB"));
-            Assert.Equal("foo", lambda.Children.Skip(2).First().Children.First().Get<string>());
-            Assert.Equal("fooAA", lambda.Children.Skip(2).First().Children.Skip(1).First().Get<string>());
-            Assert.Equal("fooBB", lambda.Children.Skip(2).First().Children.Skip(2).First().Get<string>());
+            Assert.Equal("fooAA", lambda.Children.Skip(2).First().Children.First().Get<string>());
+            Assert.Equal("fooBB", lambda.Children.Skip(2).First().Children.Skip(1).First().Get<string>());
         }
 
         [Fact]
@@ -92,9 +91,8 @@ slots.vocabulary:foo");
             Assert.NotEmpty(lambda.Children.Skip(1).First().Children);
             Assert.NotEmpty(lambda.Children.Skip(2).First().Children.Where(x => x.GetEx<string>() == "fooAA"));
             Assert.NotEmpty(lambda.Children.Skip(2).First().Children.Where(x => x.GetEx<string>() == "fooBB"));
-            Assert.Equal("foo", lambda.Children.Skip(2).First().Children.First().Get<string>());
-            Assert.Equal("fooAA", lambda.Children.Skip(2).First().Children.Skip(1).First().Get<string>());
-            Assert.Equal("fooBB", lambda.Children.Skip(2).First().Children.Skip(2).First().Get<string>());
+            Assert.Equal("fooAA", lambda.Children.Skip(2).First().Children.First().Get<string>());
+            Assert.Equal("fooBB", lambda.Children.Skip(2).First().Children.Skip(1).First().Get<string>());
         }
 
         [Fact]
