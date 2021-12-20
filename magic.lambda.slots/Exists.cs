@@ -5,7 +5,7 @@
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
-using magic.lambda.caching.helpers;
+using magic.lambda.caching.contracts;
 
 namespace magic.lambda.slots
 {
@@ -15,13 +15,13 @@ namespace magic.lambda.slots
     [Slot(Name = "slots.exists")]
     public class Exists : ISlot
     {
-        readonly IMagicMemoryCache _cache;
+        readonly IMagicCache _cache;
 
         /// <summary>
         /// Creates an instance of your type.
         /// </summary>
         /// <param name="cache">Cache implementation to use for actually storing slots.</param>
-        public Exists(IMagicMemoryCache cache)
+        public Exists(IMagicCache cache)
         {
             _cache = cache;
         }
