@@ -34,7 +34,7 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            var lambda = (_cache.Get(input.Get<string>(), true) as Node).Clone();
+            var lambda = (_cache.Get("slots." + input.Get<string>(), true) as Node).Clone();
             input.AddRange(lambda.Children.ToList());
         }
     }

@@ -88,7 +88,7 @@ namespace magic.lambda.slots
             if (whitelist != null && !whitelist.Any(x => x.Name == "signal" && x.Get<string>() == name))
                 throw new HyperlambdaException($"Dynamic slot [{name}] does not exist in scope");
 
-            var lambda = (_cache.Get(name, true) as Node).Clone();
+            var lambda = (_cache.Get("slots." + name, true) as Node).Clone();
 
             // Preparing arguments, if there are any.
             if (input.Children.Any())

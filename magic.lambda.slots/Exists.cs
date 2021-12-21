@@ -33,7 +33,7 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            input.Value = _cache.Get(input.Get<string>(), true) != null;
+            input.Value = _cache.Get("slots." + input.Get<string>(), true) != null;
         }
     }
 }

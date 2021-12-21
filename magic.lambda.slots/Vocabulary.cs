@@ -35,7 +35,7 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            var filter = input.GetEx<string>();
+            var filter = "slots." + input.GetEx<string>();
             input.Value = null;
             var list = _cache
                 .Items(filter, true)
@@ -44,8 +44,8 @@ namespace magic.lambda.slots
             list.Sort((lhs, rhs) => string.Compare(lhs, rhs, System.StringComparison.InvariantCulture));
             var whitelist = signaler.Peek<List<Node>>("whitelist");
             input.AddRange(list
-                .Where(x => whitelist == null || whitelist.Any(x2 => x2.Name == "signal" && x2.Get<string>() == x))
-                .Select(x => new Node("", x)));
+                .Where(x => whitelist == null || whitelist.Any(x2 => x2.Name == "signal" && x2.Get<string>() == x.Substring(6)))
+                .Select(x => new Node("", x.Substring(6))));
         }
     }
 }

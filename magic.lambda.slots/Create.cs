@@ -35,8 +35,9 @@ namespace magic.lambda.slots
         public void Signal(ISignaler signaler, Node input)
         {
             _cache.Upsert(
-                input.Get<string>(),
+                "slots." + input.Get<string>(),
                 input.Clone(),
+                // Notice, to avoid funny "locale issues" with locales not having 9999 years, we use 100 years and NOT MaxValue
                 DateTime.UtcNow.AddYears(100),
                 true);
         }
