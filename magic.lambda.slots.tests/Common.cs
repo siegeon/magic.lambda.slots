@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using magic.node;
 using magic.node.contracts;
 using magic.signals.services;
@@ -24,8 +25,14 @@ namespace magic.lambda.slots.tests
         private class RootResolver : IRootResolver
         {
             public string RootFolder => AppDomain.CurrentDomain.BaseDirectory;
+            public string AbsoluteRootFolder => AppDomain.CurrentDomain.BaseDirectory;
 
             public string AbsolutePath(string path)
+            {
+                return RootFolder + path.TrimStart(new char[] { '/', '\\' });
+            }
+
+            public string RootPath(string path)
             {
                 return RootFolder + path.TrimStart(new char[] { '/', '\\' });
             }
@@ -58,9 +65,9 @@ namespace magic.lambda.slots.tests
 
         static IServiceProvider Initialize()
         {
-            var configuration = new ConfigurationBuilder().Build();
             var services = new ServiceCollection();
-            services.AddTransient<IConfiguration>((svc) => configuration);
+            var mockConfiguration = new Mock<IMagicConfiguration>();
+            services.AddTransient((svc) => mockConfiguration.Object);
             services.AddTransient<ISignaler, Signaler>();
             services.AddSingleton<IMagicCache, MagicMemoryCache>();
             services.AddTransient<IRootResolver, RootResolver>();
