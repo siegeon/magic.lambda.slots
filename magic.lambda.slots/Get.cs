@@ -3,6 +3,7 @@
  */
 
 using System.Linq;
+using System.Threading.Tasks;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
@@ -14,7 +15,7 @@ namespace magic.lambda.slots
     /// [slots.get] slot for retrieving slot that has been created with the [slots.create] slot.
     /// </summary>
     [Slot(Name = "slots.get")]
-    public class Get : ISlot
+    public class Get : ISlot, ISlotAsync
     {
         readonly IMagicCache _cache;
 
@@ -34,7 +35,17 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            var lambda = (_cache.Get("slots." + input.Get<string>(), true) as Node).Clone();
+            SignalAsync(signaler, input).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Slot implementation.
+        /// </summary>
+        /// <param name="signaler">Signaler that raised signal.</param>
+        /// <param name="input">Arguments to slot.</param>
+        public async Task SignalAsync(ISignaler signaler, Node input)
+        {
+            var lambda = (await _cache.GetAsync("slots." + input.Get<string>(), true) as Node).Clone();
             input.AddRange(lambda.Children.ToList());
         }
     }

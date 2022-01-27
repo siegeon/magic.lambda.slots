@@ -41,7 +41,7 @@ namespace magic.lambda.slots
             signaler.Scope("slots.result", result, () =>
             {
                 // Evaluating lambda of slot, making sure we temporary clear any existing [whitelist] declarations.
-                var lambda = GetLambda(signaler, input);
+                var lambda = GetLambda(signaler, input).GetAwaiter().GetResult();
                 signaler.Scope("whitelist", null, () =>
                 {
                     signaler.Signal("eval", lambda);
@@ -66,7 +66,7 @@ namespace magic.lambda.slots
             await signaler.ScopeAsync("slots.result", result, async () =>
             {
                 // Evaluating lambda of slot, making sure we temporary clear any existing [whitelist] declarations.
-                var lambda = GetLambda(signaler, input);
+                var lambda = await GetLambda(signaler, input);
                 await signaler.ScopeAsync("whitelist", null, async () =>
                 {
                     await signaler.SignalAsync("eval", lambda);
@@ -80,7 +80,7 @@ namespace magic.lambda.slots
 
         #region [ -- Private helper methods -- ]
 
-        Node GetLambda(ISignaler signaler, Node input)
+        async Task<Node> GetLambda(ISignaler signaler, Node input)
         {
             var name = input.GetEx<string>();
 
@@ -88,7 +88,7 @@ namespace magic.lambda.slots
             if (whitelist != null && !whitelist.Any(x => x.Name == "signal" && x.Get<string>() == name))
                 throw new HyperlambdaException($"Dynamic slot [{name}] does not exist in scope");
 
-            var lambda = (_cache.Get("slots." + name, true) as Node).Clone();
+            var lambda = (await _cache.GetAsync("slots." + name, true) as Node).Clone();
 
             // Preparing arguments, if there are any.
             if (input.Children.Any())

@@ -3,6 +3,7 @@
  */
 
 using System;
+using System.Threading.Tasks;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
@@ -14,7 +15,7 @@ namespace magic.lambda.slots
     /// [slots.create] slot that creates a dynamic slot, that can be invoked using the [signal] slot.
     /// </summary>
     [Slot(Name = "slots.create")]
-    public class Create : ISlot
+    public class Create : ISlot, ISlotAsync
     {
         readonly IMagicCache _cache;
 
@@ -34,7 +35,17 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            _cache.Upsert(
+            SignalAsync(signaler, input).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Slot implementation.
+        /// </summary>
+        /// <param name="signaler">Signaler that raised signal.</param>
+        /// <param name="input">Arguments to slot.</param>
+        public async Task SignalAsync(ISignaler signaler, Node input)
+        {
+            await _cache.UpsertAsync(
                 "slots." + input.Get<string>(),
                 input.Clone(),
                 // Notice, to avoid funny "locale issues" with locales not having 9999 years, we use 100 years and NOT MaxValue

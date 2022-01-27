@@ -3,6 +3,7 @@
  */
 
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using magic.node;
 using magic.node.extensions;
@@ -15,7 +16,7 @@ namespace magic.lambda.slots
     /// [slots.vocabulary] slot that will return the names of all dynamically created slots to caller.
     /// </summary>
     [Slot(Name = "slots.vocabulary")]
-    public class Vocabulary : ISlot
+    public class Vocabulary : ISlot, ISlotAsync
     {
         readonly IMagicCache _cache;
 
@@ -35,10 +36,18 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
+        }
+
+        /// <summary>
+        /// Slot implementation.
+        /// </summary>
+        /// <param name="signaler">Signaler that raised signal.</param>
+        /// <param name="input">Arguments to slot.</param>
+        public async Task SignalAsync(ISignaler signaler, Node input)
+        {
             var filter = "slots." + input.GetEx<string>();
             input.Value = null;
-            var list = _cache
-                .Items(filter, true)
+            var list = (await _cache.ItemsAsync(filter, true))
                 .Select(x => x.Key)
                 .ToList();
             list.Sort((lhs, rhs) => string.Compare(lhs, rhs, System.StringComparison.InvariantCulture));

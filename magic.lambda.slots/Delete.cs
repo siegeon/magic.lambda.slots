@@ -2,6 +2,7 @@
  * Magic Cloud, copyright Aista, Ltd. See the attached LICENSE file for details.
  */
 
+using System.Threading.Tasks;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
@@ -13,7 +14,7 @@ namespace magic.lambda.slots
     /// [slots.delete] slot for deleting slot that has been created with the [slots.create] slot.
     /// </summary>
     [Slot(Name = "slots.delete")]
-    public class Delete : ISlot
+    public class Delete : ISlot, ISlotAsync
     {
         readonly IMagicCache _cache;
 
@@ -33,7 +34,17 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
-            _cache.Remove("slots." + input.Get<string>(), true);
+            SignalAsync(signaler, input).GetAwaiter().GetResult();
+        }
+
+        /// <summary>
+        /// Slot implementation.
+        /// </summary>
+        /// <param name="signaler">Signaler that raised signal.</param>
+        /// <param name="input">Arguments to slot.</param>
+        public async Task SignalAsync(ISignaler signaler, Node input)
+        {
+            await _cache.RemoveAsync("slots." + input.Get<string>(), true);
         }
     }
 }
