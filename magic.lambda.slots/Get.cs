@@ -2,12 +2,12 @@
  * Magic Cloud, copyright Aista, Ltd. See the attached LICENSE file for details.
  */
 
-using System.Linq;
 using System.Threading.Tasks;
 using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
 using magic.lambda.caching.contracts;
+using magic.node.extensions.hyperlambda;
 
 namespace magic.lambda.slots
 {
@@ -45,8 +45,8 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public async Task SignalAsync(ISignaler signaler, Node input)
         {
-            var lambda = (await _cache.GetAsync("slots." + input.Get<string>(), true) as Node).Clone();
-            input.AddRange(lambda.Children.ToList());
+            var hyper = await _cache.GetAsync("slots." + input.Get<string>(), true);
+            input.AddRange(HyperlambdaParser.Parse(hyper).Children);
         }
     }
 }

@@ -9,6 +9,7 @@ using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
 using magic.lambda.caching.contracts;
+using magic.node.extensions.hyperlambda;
 
 namespace magic.lambda.slots
 {
@@ -88,7 +89,8 @@ namespace magic.lambda.slots
             if (whitelist != null && !whitelist.Any(x => x.Name == "signal" && x.Get<string>() == name))
                 throw new HyperlambdaException($"Dynamic slot [{name}] does not exist in scope");
 
-            var lambda = (await _cache.GetAsync("slots." + name, true) as Node).Clone();
+            var hyper = await _cache.GetAsync("slots." + name, true);
+            var lambda = HyperlambdaParser.Parse(hyper);
 
             // Preparing arguments, if there are any.
             if (input.Children.Any())

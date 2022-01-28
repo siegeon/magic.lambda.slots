@@ -8,6 +8,7 @@ using magic.node;
 using magic.node.extensions;
 using magic.signals.contracts;
 using magic.lambda.caching.contracts;
+using magic.node.extensions.hyperlambda;
 
 namespace magic.lambda.slots
 {
@@ -47,7 +48,8 @@ namespace magic.lambda.slots
         {
             await _cache.UpsertAsync(
                 "slots." + input.Get<string>(),
-                input.Clone(),
+                HyperlambdaGenerator.GetHyperlambda(input.Children, false),
+
                 // Notice, to avoid funny "locale issues" with locales not having 9999 years, we use 100 years and NOT MaxValue
                 DateTime.UtcNow.AddYears(100),
                 true);
