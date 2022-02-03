@@ -35,7 +35,7 @@ signal:foo");
         [Fact]
         public void CreateSlotDelete_Throws()
         {
-            Assert.Throws<NullReferenceException>(() => Common.Evaluate(@"
+            Assert.Throws<ArgumentNullException>(() => Common.Evaluate(@"
 slots.create:foo
    return-value:int:57
 slots.delete:foo

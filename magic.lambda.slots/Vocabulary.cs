@@ -36,6 +36,7 @@ namespace magic.lambda.slots
         /// <param name="input">Arguments to slot.</param>
         public void Signal(ISignaler signaler, Node input)
         {
+            SignalAsync(signaler, input).GetAwaiter().GetResult();
         }
 
         /// <summary>
